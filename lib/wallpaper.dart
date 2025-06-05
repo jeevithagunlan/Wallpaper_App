@@ -11,6 +11,7 @@ class WallpaperWidget extends StatefulWidget {
 
 class _WallpaperWidgetState extends State<WallpaperWidget> {
   List images = [];
+  int page = 1;
   @override
   void initState() {
     super.initState();
@@ -33,6 +34,34 @@ class _WallpaperWidgetState extends State<WallpaperWidget> {
           });
           print(images[0]);
         });
+  }
+
+  Future<void> loadmore() async {
+    setState(() {
+      page = page + 1;
+    });
+    String url =
+        'https://api.pexels.com/v1/curated?per_page=80&page=' + page.toString();
+    final response = await http
+        .get(
+          Uri.parse(url),
+          headers: {
+            'Authorization':
+                'kLzTzRezd2giUHEHv1UUyYrchR1Gj6ScNFqPQlbhCcvQQBNZUdkpkoCS',
+          },
+        )
+        .then((value) {
+          Map result = jsonDecode(value.body);
+          setState(() {
+            images.addAll(result['photos']);
+          });
+        });
+    if (response.statusCode == 200) {
+      Map result = jsonDecode(response.body);
+      setState(() {
+        images.addAll(result['photos']);
+      });
+    }
   }
 
   Widget build(BuildContext context) {
@@ -61,14 +90,19 @@ class _WallpaperWidgetState extends State<WallpaperWidget> {
               ),
             ),
           ),
-          Container(
-            height: 60,
-            width: double.infinity,
-            color: const Color.fromARGB(255, 25, 25, 26),
-            child: Center(
-              child: Text(
-                "Load More",
-                style: TextStyle(fontSize: 25, color: Colors.white),
+          InkWell(
+            onTap: () {
+              loadmore();
+            },
+            child: Container(
+              height: 60,
+              width: double.infinity,
+              color: const Color.fromARGB(255, 25, 25, 26),
+              child: Center(
+                child: Text(
+                  "Load More",
+                  style: TextStyle(fontSize: 25, color: Colors.white),
+                ),
               ),
             ),
           ),
