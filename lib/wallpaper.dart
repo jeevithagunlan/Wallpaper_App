@@ -50,7 +50,13 @@ class _WallpaperWidgetState extends State<WallpaperWidget> {
                   childAspectRatio: 2 / 3, //size
                 ),
                 itemBuilder: (context, index) {
-                  return Container(color: Colors.white);
+                  return Container(
+                    color: Colors.white,
+                    child: Image.network(
+                      images[index]['src']['tiny'],
+                      fit: BoxFit.cover,
+                    ),
+                  );
                 },
               ),
             ),
