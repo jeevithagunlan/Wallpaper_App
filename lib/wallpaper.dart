@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:walpaper_app/fullscreen.dart';
 
 class WallpaperWidget extends StatefulWidget {
   const WallpaperWidget({super.key});
@@ -79,11 +80,23 @@ class _WallpaperWidgetState extends State<WallpaperWidget> {
                   childAspectRatio: 2 / 3, //size
                 ),
                 itemBuilder: (context, index) {
-                  return Container(
-                    color: Colors.white,
-                    child: Image.network(
-                      images[index]['src']['tiny'],
-                      fit: BoxFit.cover,
+                  return InkWell(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => FullScrenWalpaper(
+                            imageurl: images[index]['src']['large2x'],
+                          ),
+                        ),
+                      );
+                    },
+                    child: Container(
+                      color: Colors.white,
+                      child: Image.network(
+                        images[index]['src']['tiny'],
+                        fit: BoxFit.cover,
+                      ),
                     ),
                   );
                 },
